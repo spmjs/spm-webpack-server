@@ -38,6 +38,11 @@ function Server(compiler, opts) {
 
   var app = this.app = new express();
 
+  app.use(require('./combo')({
+    hostname: ip,
+    port: opts.port
+  }));
+
   app.get(/\.html?$/, function(req, res, next) {
     var file = join(opts.cwd, req.url);
     var content = readFile(file, 'utf-8');

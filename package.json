@@ -1,0 +1,36 @@
+{
+  "name": "spm-webpack-server",
+  "version": "0.1.0",
+  "description": "Server for spm projects.",
+  "main": "index",
+  "dependencies": {
+    "commander": "~2.7.1",
+    "express": "~4.12.3",
+    "gnode": "~0.1.1",
+    "serve-index": "~1.6.3",
+    "spm-log": "~0.1.2",
+    "spm-webpack": "~0.1.0",
+    "webpack": "~1.7.3",
+    "webpack-dev-middleware": "~1.0.11"
+  },
+  "devDependencies": {
+    "istanbul": "0",
+    "jshint": "2",
+    "coveralls": "2",
+    "mocha": "1",
+    "should": "3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spmjs/spm-webpack-server"
+  },
+  "homepage": "https://github.com/spmjs/spm-webpack-server",
+  "author": "chencheng <sorrycc@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "make test"
+  },
+  "bin": {
+    "spm-webpack-server": "cli.js"
+  }
+}

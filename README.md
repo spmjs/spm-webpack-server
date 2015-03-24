@@ -18,7 +18,7 @@ $ npm install spm-webpack-server -g
 ## Usage
 
 ```bash
-var spm-webpack-server = require('spm-webpack-server');
+$ spm-webpack-server [option]
 ```
 
 ## LISENCE

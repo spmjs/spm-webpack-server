@@ -79,6 +79,33 @@ function Server(compiler, opts) {
     });
   }
 
+  if (opts.proxy) {
+    var anyproxy;
+    try {
+      anyproxy = require('anyproxy');
+    } catch(e) {
+      log.error('error', 'npm install anyproxy -g to enable proxy');
+      process.exit(1);
+    }
+
+    if (!anyproxy) {
+      log.error('proxy', '`anyproxy` is not install correctly');
+      process.exit(1);
+    }
+
+    !anyproxy.isRootCAFileExists() && anyproxy.generateRootCA();
+
+    new anyproxy.proxyServer({
+      type: 'http',
+      port: opts.anyproxyPort || 8989,
+      hostname: 'localhost',
+      rule: require('./rule')({
+        port: opts.port,
+        hostname: ip
+      })
+    });
+  }
+
   this.listeningApp = opts.https
     ? https.createServer({
     // using built-in self-signed certificate

@@ -14,6 +14,7 @@ program
   .option('--livereload', 'livereload')
   .option('--https', 'https')
   .option('--port', 'port')
+  .option('--proxy', 'proxy with anyproxy')
   .option('--debug', 'build files without compress')
   .option('--verbose', 'show more logging')
   .parse(process.argv);
@@ -26,17 +27,16 @@ var args = {
   https: program.https,
   weinre: program.weinre,
   livereload: program.livereload,
-  quiet: true
+  proxy: program.proxy,
+  quiet: true,
+  port: program.port || 8000
 };
-
-var port = program.port || 8000;
-var host = '127.0.0.1';
 
 getWebpackOpts(args, function(err, webpackOpts) {
   webpackOpts.devtool = '#eval';
-  new Server(webpack(webpackOpts), args).listen(port, host, function(err) {
+  new Server(webpack(webpackOpts), args).listen(args.port, function(err) {
     if(err) throw err;
-    log.info('webserver', 'listened on', port);
+    log.info('webserver', 'listened on', args.port);
   });
 });
 

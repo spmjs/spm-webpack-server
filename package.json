@@ -4,14 +4,18 @@
   "description": "Server for spm projects.",
   "main": "index",
   "dependencies": {
+    "coffee-script": "~1.9.1",
     "commander": "~2.7.1",
     "express": "~4.12.3",
     "gnode": "~0.1.1",
+    "internal-ip": "~1.0.0",
     "serve-index": "~1.6.3",
     "spm-log": "~0.1.2",
     "spm-webpack": "~0.1.0",
+    "tiny-lr": "~0.1.5",
     "webpack": "~1.7.3",
-    "webpack-dev-middleware": "~1.0.11"
+    "webpack-dev-middleware": "~1.0.11",
+    "weinre": "~2.0.0-pre-I0Z7U9OV"
   },
   "devDependencies": {
     "istanbul": "0",

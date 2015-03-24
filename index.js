@@ -55,9 +55,11 @@ function Server(compiler, opts) {
     res.send(content);
   });
 
-  app.use(this.middleware = webpackDevMiddleware(compiler, opts));
+  app.use(webpackDevMiddleware(compiler, opts));
 
   app.get('*', express.static(opts.cwd), serveIndex(opts.cwd));
+
+  app.use(require('./cdn')());
 
   if (opts.weinre) {
     require('coffee-script');

@@ -2,7 +2,7 @@
 
 ---
 
-## 0.1.1 (in dev)
+## 0.1.1
 
 - Fix log.info don't log anything
 - Fix read html file error with querystring

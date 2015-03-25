@@ -5,11 +5,10 @@
 require('gnode');
 var program = require('commander');
 var log = require('spm-log');
-var webpack = require('webpack');
-var getWebpackOpts = require('spm-webpack').build.getWebpackOpts;
 var Server = require('./index');
 
 program
+  .version(require('./package').version, '-v, --version')
   .option('--weinre', 'weinre')
   .option('--livereload', 'livereload')
   .option('--https', 'https')
@@ -32,6 +31,8 @@ var args = {
   port: program.port || 8000
 };
 
+var webpack = require('webpack');
+var getWebpackOpts = require('spm-webpack').build.getWebpackOpts;
 getWebpackOpts(args, function(err, webpackOpts) {
   webpackOpts.devtool = '#eval';
   new Server(webpack(webpackOpts), args).listen(args.port, function(err) {

@@ -4,6 +4,7 @@
 
 ## 0.1.1 (in dev)
 
+- Fix read html file error with querystring
 - Fix port params not available
 - Improve performance
 

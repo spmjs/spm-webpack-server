@@ -10,6 +10,7 @@ var path = require('path');
 var log = require('spm-log');
 var join = path.join;
 var readFile = fs.readFileSync;
+var url = require('url');
 
 function Server(compiler, opts) {
   opts = opts || {};
@@ -44,7 +45,8 @@ function Server(compiler, opts) {
   }));
 
   app.get(/\.html?$/, function(req, res, next) {
-    var file = join(opts.cwd, req.url);
+    var file = url.parse(req.url).pathname;
+    file = join(opts.cwd, file);
     var content = readFile(file, 'utf-8');
     if (opts.livereload) {
       content = content + '<script src="http://'+ip+':35729/livereload.js"></script>'

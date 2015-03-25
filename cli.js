@@ -33,10 +33,12 @@ var args = {
 
 var webpack = require('webpack');
 var getWebpackOpts = require('spm-webpack').build.getWebpackOpts;
+
 getWebpackOpts(args, function(err, webpackOpts) {
   webpackOpts.devtool = '#eval';
   new Server(webpack(webpackOpts), args).listen(args.port, function(err) {
     if(err) throw err;
+    log.level = 'info';
     log.info('webserver', 'listened on', args.port);
   });
 });

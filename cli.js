@@ -12,7 +12,7 @@ program
   .option('--weinre', 'weinre')
   .option('--livereload', 'livereload')
   .option('--https', 'https')
-  .option('--port', 'port')
+  .option('-p, --port <port>', 'port')
   .option('--proxy', 'proxy with anyproxy')
   .option('--debug', 'build files without compress')
   .option('--verbose', 'show more logging')

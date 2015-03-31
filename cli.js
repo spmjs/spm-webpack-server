@@ -31,12 +31,12 @@ var args = {
   port: program.port || 8000
 };
 
-var webpack = require('webpack');
-var getWebpackOpts = require('spm-webpack').build.getWebpackOpts;
+var sw = require('spm-webpack');
+var getWebpackOpts = sw.build.getWebpackOpts;
 
 getWebpackOpts(args, function(err, webpackOpts) {
   webpackOpts.devtool = '#eval';
-  new Server(webpack(webpackOpts), args).listen(args.port, function(err) {
+  new Server(sw.webpack(webpackOpts), args).listen(args.port, function(err) {
     if(err) throw err;
     log.level = 'info';
     log.info('webserver', 'listened on', args.port);

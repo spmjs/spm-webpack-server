@@ -27,7 +27,7 @@ var args = {
   weinre: program.weinre,
   livereload: program.livereload,
   proxy: program.proxy,
-  quiet: true,
+  quiet: program.verbose,
   port: program.port || 8000
 };
 

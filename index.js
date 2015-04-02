@@ -1,7 +1,7 @@
 'use strict';
 
 var express = require('express');
-var webpackDevMiddleware = require('webpack-dev-middleware');
+var webpackDevMiddleware = require('./middleware');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
@@ -57,7 +57,12 @@ function Server(compiler, opts) {
     res.send(content);
   });
 
-  app.use(webpackDevMiddleware(compiler, opts));
+  var pkg;
+  var pkgFile = join(opts.cwd, 'package.json');
+  if (fs.existsSync(pkgFile)) {
+    pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf-8'));
+  }
+  app.use(webpackDevMiddleware(compiler, opts, pkg));
 
   app.get('*', express.static(opts.cwd), serveIndex(opts.cwd));
 

@@ -2,7 +2,7 @@
 
 ---
 
-## 0.2.0 (in dev)
+## 0.2.0
 
 - feat(middleware): don't flatten path, and prefix idleading if not found
 - fix: verbose param don't work

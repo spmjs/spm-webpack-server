@@ -5,6 +5,7 @@
 var path = require("path");
 var MemoryFileSystem = require("memory-fs");
 var mime = require("mime");
+var log = require('spm-log');
 
 // constructor for the middleware
 module.exports = function(compiler, options, pkg) {
@@ -123,11 +124,15 @@ module.exports = function(compiler, options, pkg) {
 
   // The middleware function
   function webpackDevMiddleware(req, res, next) {
-    var filename = getFilenameFromUrl(req.url);
-    if (filename === false) return next();
-
     var prefix  = require('./utils').getPrefix(pkg);
-    filename = filename.replace(prefix, '');
+    var url = req.url;
+    if (prefix && req.url.indexOf(prefix) === -1) {
+      url = '/' + prefix + url.slice(1);
+    }
+
+    var filename = getFilenameFromUrl(url);
+    if (filename === false) return next();
+    log.debug(filename);
 
     // in lazy mode, rebuild on bundle request
     if(options.lazy && filename === pathJoin(compiler.outputPath, options.filename))

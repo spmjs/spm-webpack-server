@@ -5,6 +5,7 @@
 ## 0.2.0 (in dev)
 
 - feat(middleware): don't flatten path, and prefix idleading if not found
+- fix: verbose param don't work
 
 ## 0.1.2
 

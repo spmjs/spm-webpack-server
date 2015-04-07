@@ -16,7 +16,7 @@
     "request": "~2.53.0",
     "serve-index": "~1.6.3",
     "spm-log": "~0.1.2",
-    "spm-webpack": "~0.2.0",
+    "spm-webpack": "~0.3.0",
     "tiny-lr": "~0.1.5",
     "weinre": "~2.0.0-pre-I0Z7U9OV"
   },

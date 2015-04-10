@@ -6,6 +6,8 @@ require('gnode');
 var program = require('commander');
 var log = require('spm-log');
 var Server = require('./index');
+var spmArgv = require('spm-argv');
+var extend = require('extend');
 
 program
   .version(require('./package').version, '-v, --version')
@@ -20,8 +22,9 @@ program
 
 log.config(program);
 
+var cwd = process.cwd();
 var args = {
-  cwd: process.cwd(),
+  cwd: cwd,
   debug: program.debug,
   https: program.https,
   weinre: program.weinre,
@@ -34,8 +37,10 @@ var args = {
 var sw = require('spm-webpack');
 var getWebpackOpts = sw.build.getWebpackOpts;
 
+var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd));
+
 getWebpackOpts(args, function(err, webpackOpts) {
-  webpackOpts.devtool = '#eval';
+  webpackOpts.devtool = spmArgs.server.devtool;
   new Server(sw.webpack(webpackOpts), args).listen(args.port, function(err) {
     if(err) throw err;
     log.level = 'info';

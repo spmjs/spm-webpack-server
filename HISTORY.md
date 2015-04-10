@@ -2,6 +2,10 @@
 
 ---
 
+## 0.2.1
+
+- feat: support devtool config in package.json
+
 ## 0.2.0
 
 - feat(middleware): don't flatten path, and prefix idleading if not found

@@ -2,6 +2,10 @@
 
 ---
 
+## 0.2.2 (in dev)
+
+- feat: output error message
+
 ## 0.2.1
 
 - feat: support devtool config in package.json

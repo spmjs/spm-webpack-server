@@ -16,14 +16,22 @@ function Server(compiler, opts) {
   opts = opts || {};
   this.headers = opts.headers;
 
-  compiler.plugin('compile', function(stats) {
+  compiler.plugin('compile', function() {
     log.info('build', 'compile');
   });
-  compiler.plugin('invalid', function(stats) {
+  compiler.plugin('invalid', function() {
     log.info('build', 'invalid');
   });
   compiler.plugin('done', function(stats) {
     log.info('build', 'done');
+
+    var errors = stats.compilation.errors;
+    if (errors && errors.length) {
+      errors.forEach(function(err) {
+        log.error('error', err.message);
+      })
+    }
+
     if (opts.livereload) {
       try {
         var items = Object.keys(stats.compilation.assets);

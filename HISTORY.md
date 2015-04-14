@@ -2,7 +2,7 @@
 
 ---
 
-## 0.2.2 (in dev)
+## 0.2.2
 
 - feat: output error message
 

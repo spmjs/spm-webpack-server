@@ -11,12 +11,12 @@ var extend = require('extend');
 
 program
   .version(require('./package').version, '-v, --version')
-  .option('--weinre', 'weinre')
-  .option('--livereload', 'livereload')
-  .option('--https', 'https')
   .option('-p, --port <port>', 'port')
   .option('--proxy', 'proxy with anyproxy')
+  .option('--livereload', 'livereload')
   .option('--debug', 'build files without compress')
+  .option('--weinre', 'weinre')
+  .option('--https', 'https')
   .option('--verbose', 'show more logging')
   .parse(process.argv);
 

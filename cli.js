@@ -14,7 +14,7 @@ program
   .option('-p, --port <port>', 'port')
   .option('--proxy', 'proxy with anyproxy')
   .option('--livereload', 'livereload')
-  .option('--debug', 'build files without compress')
+  .option('--compress', 'build files with compress')
   .option('--weinre', 'weinre')
   .option('--https', 'https')
   .option('--verbose', 'show more logging')
@@ -25,7 +25,7 @@ log.config(program);
 var cwd = process.cwd();
 var args = {
   cwd: cwd,
-  debug: program.debug,
+  debug: !program.compress,
   https: program.https,
   weinre: program.weinre,
   livereload: program.livereload,

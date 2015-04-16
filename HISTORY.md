@@ -4,6 +4,7 @@
 
 ## 0.2.3 (in dev)
 
+- feat: don't compress by default
 - feat: support define plugin
 
 ## 0.2.2

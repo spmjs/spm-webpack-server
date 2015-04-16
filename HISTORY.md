@@ -2,7 +2,7 @@
 
 ---
 
-## 0.2.3 (in dev)
+## 0.3.0
 
 - feat: don't compress by default
 - feat: support define plugin

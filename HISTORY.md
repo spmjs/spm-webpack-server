@@ -2,6 +2,10 @@
 
 ---
 
+## 0.2.3 (in dev)
+
+- feat: support define plugin
+
 ## 0.2.2
 
 - feat: output error message

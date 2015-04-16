@@ -41,6 +41,16 @@ var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd));
 
 getWebpackOpts(args, function(err, webpackOpts) {
   webpackOpts.devtool = spmArgs.server.devtool;
+  if (spmArgs.server.define) {
+    for (var i=0; i<webpackOpts.plugins.length; i++) {
+      var p = webpackOpts.plugins[i];
+      if (p.definitions) {
+        webpackOpts.plugins.splice(i, 1);
+        break;
+      }
+    }
+    webpackOpts.plugins.push(new sw.webpack.DefinePlugin(spmArgs.server.define));
+  }
   new Server(sw.webpack(webpackOpts), args).listen(args.port, function(err) {
     if(err) throw err;
     log.level = 'info';

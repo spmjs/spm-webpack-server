@@ -19,6 +19,7 @@
     "spm-argv": "~0.1.0",
     "spm-log": "~0.1.2",
     "spm-webpack": "~0.3.0",
+    "spmrc": "~1.2.0",
     "tiny-lr": "~0.1.5",
     "weinre": "~2.0.0-pre-I0Z7U9OV"
   },

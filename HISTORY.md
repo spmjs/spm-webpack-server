@@ -2,6 +2,10 @@
 
 ---
 
+## 0.3.1
+
+- fix: cdn hosts unavailable
+
 ## 0.3.0
 
 - feat: don't compress by default

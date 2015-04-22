@@ -2,19 +2,23 @@
 
 var request = require('request');
 var log = require('spm-log');
+var spmrc = require('spmrc');
 
 module.exports = function(opts) {
 
-  var proxy = opts && opts.proxy || ['https://115.238.23.196', 'a.alipayobjects.com'];
+  opts = opts || {};
+
+  var cdnHost = opts.cdnHost || spmrc.get('cdnHost') || 'https://a.alipayobjects.com';
+  var cdnDomain = opts.cdnDomain || spmrc.get('cdnDomain') || 'a.alipayobjects.com';
 
   return function(req, res, next){
-    var url = proxy[0] + req.url;
+    var url = cdnHost + req.url;
     log.info('cdn', 'fetch', url);
 
     request({
       url: url,
       headers: {
-        'Host': proxy[1]
+        'Host': cdnDomain
       },
       gzip: true
     }, function(err, result) {

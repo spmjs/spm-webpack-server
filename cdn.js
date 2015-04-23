@@ -1,6 +1,6 @@
 'use strict';
 
-var request = require('request');
+var request = require('co-request');
 var log = require('spm-log');
 var spmrc = require('spmrc');
 
@@ -11,24 +11,24 @@ module.exports = function(opts) {
   var cdnHost = opts.cdnHost || spmrc.get('cdnHost') || 'https://a.alipayobjects.com';
   var cdnDomain = opts.cdnDomain || spmrc.get('cdnDomain') || 'a.alipayobjects.com';
 
-  return function(req, res, next){
-    var url = cdnHost + req.url;
+  return function*(next){
+    var url = cdnHost + this.url;
     log.info('cdn', 'fetch', url);
 
-    request({
+    var result = yield request({
       url: url,
       headers: {
         'Host': cdnDomain
       },
       gzip: true
-    }, function(err, result) {
-      if (result.statusCode === 404) {
-        log.info('cdn', '404', url);
-        next();
-      } else {
-        res.end(result.body);
-      }
     });
+
+    if (result.statusCode === 404) {
+      log.info('cdn', '404', url);
+      yield next;
+    } else {
+      this.body = result.body;
+    }
 
   };
 

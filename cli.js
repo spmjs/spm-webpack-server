@@ -5,9 +5,9 @@
 require('gnode');
 var program = require('commander');
 var log = require('spm-log');
-var Server = require('./index');
 var spmArgv = require('spm-argv');
 var extend = require('extend');
+var Server = require('./index');
 
 program
   .version(require('./package').version, '-v, --version')
@@ -35,12 +35,11 @@ var args = {
 };
 
 var sw = require('spm-webpack');
-var getWebpackOpts = sw.build.getWebpackOpts;
 
-var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd));
-
-getWebpackOpts(args, function(err, webpackOpts) {
+sw.build.getWebpackOpts(args, function(err, webpackOpts) {
+  var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd));
   webpackOpts.devtool = spmArgs.server.devtool;
+
   if (spmArgs.server.define) {
     for (var i=0; i<webpackOpts.plugins.length; i++) {
       var p = webpackOpts.plugins[i];
@@ -51,10 +50,11 @@ getWebpackOpts(args, function(err, webpackOpts) {
     }
     webpackOpts.plugins.push(new sw.webpack.DefinePlugin(spmArgs.server.define));
   }
+
   new Server(sw.webpack(webpackOpts), args).listen(args.port, function(err) {
     if(err) throw err;
     log.level = 'info';
     log.info('webserver', 'listened on', args.port);
   });
-});
 
+});

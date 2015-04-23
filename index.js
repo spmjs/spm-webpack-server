@@ -1,11 +1,10 @@
 'use strict';
 
-var express = require('express');
+var koa = require('koa');
 var webpackDevMiddleware = require('./middleware');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
-var serveIndex = require("serve-index");
 var path = require('path');
 var log = require('spm-log');
 var join = path.join;
@@ -16,22 +15,7 @@ function Server(compiler, opts) {
   opts = opts || {};
   this.headers = opts.headers;
 
-  compiler.plugin('compile', function() {
-    log.info('build', 'compile');
-  });
-  compiler.plugin('invalid', function() {
-    log.info('build', 'invalid');
-  });
   compiler.plugin('done', function(stats) {
-    log.info('build', 'done');
-
-    var errors = stats.compilation.errors;
-    if (errors && errors.length) {
-      errors.forEach(function(err) {
-        log.error('error', err.message);
-      })
-    }
-
     if (opts.livereload) {
       try {
         var items = Object.keys(stats.compilation.assets);
@@ -45,34 +29,44 @@ function Server(compiler, opts) {
 
   var ip = require('internal-ip')();
 
-  var app = this.app = new express();
+  var app = this.app = koa();
 
   app.use(require('./combo')({
     hostname: ip,
     port: opts.port
   }));
 
-  app.get(/\.html?$/, function(req, res, next) {
-    var file = url.parse(req.url).pathname;
+  app.use(function *(next) {
+    var file = url.parse(this.url).pathname;
     file = join(opts.cwd, file);
-    var content = readFile(file, 'utf-8');
-    if (opts.livereload) {
-      content = content + '<script src="http://'+ip+':35729/livereload.js"></script>'
+    var isHTML = /\.html?$/.test(this.url);
+
+    if (isHTML && (opts.livereload || opts.weinre)) {
+      var content = readFile(file, 'utf-8');
+      if (opts.livereload) {
+        content = content + '<script src="http://' + ip + ':35729/livereload.js"></script>';
+      }
+      if (opts.weinre) {
+        content = content + '<script src="http://' + ip + ':8990/target/target-script-min.js#anonymous"></script>';
+      }
+      this.body = content;
+    } else {
+      yield next;
     }
-    if (opts.weinre) {
-      content = content + '<script src="http://'+ip+':8990/target/target-script-min.js#anonymous"></script>'
-    }
-    res.send(content);
+
+    this.set({
+      'Access-Control-Allow-Origin': '*',
+      'Timing-Allow-Origin': '*'
+    });
   });
 
-  var pkg;
-  var pkgFile = join(opts.cwd, 'package.json');
-  if (fs.existsSync(pkgFile)) {
-    pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf-8'));
-  }
-  app.use(webpackDevMiddleware(compiler, opts, pkg));
+  app.use(webpackDevMiddleware(compiler, opts));
 
-  app.get('*', express.static(opts.cwd), serveIndex(opts.cwd));
+  app.use(require('koa-static')(opts.cwd));
+  app.use(require('koa-serve-index')(opts.cwd, {
+    hidden: true,
+    view: 'details'
+  }));
 
   app.use(require('./cdn')());
 
@@ -136,12 +130,13 @@ function Server(compiler, opts) {
     ca: opts.ca || fs.readFileSync(path.join(__dirname, "./ssl/ca.crt")),
     requestCert: true,
     rejectUnauthorized: false
-  }, app)
-    : http.createServer(app);
+  }, app.callback())
+    : http.createServer(app.callback());
 }
 
-Server.prototype.use = function() {
-  this.app.use.apply(this.app, arguments);
+Server.prototype.use = function(gen) {
+  this.app.use(gen);
+  return this;
 };
 
 Server.prototype.listen = function() {

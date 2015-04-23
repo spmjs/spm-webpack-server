@@ -3,22 +3,41 @@
  Author Tobias Koppers @sokra
  */
 var path = require("path");
+var fs = require("fs");
 var MemoryFileSystem = require("memory-fs");
 var mime = require("mime");
 var log = require('spm-log');
+var join = require('path').join;
+var existsSync = fs.existsSync;
+var readFileSync = fs.readFileSync;
 
 // constructor for the middleware
-module.exports = function(compiler, options, pkg) {
+module.exports = function(compiler, options) {
   if(!options) options = {};
   if(options.watchDelay === undefined) options.watchDelay = 200;
   if(typeof options.stats === "undefined") options.stats = {};
   if(!options.stats.context) options.stats.context = process.cwd();
+
+  var pkg;
+  var pkgFile = join(options.cwd, 'package.json');
+  if (existsSync(pkgFile)) {
+    pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+  }
 
   // store our files in memory
   var files = {};
   var fs = compiler.outputFileSystem = new MemoryFileSystem();
 
   compiler.plugin("done", function(stats) {
+    log.info('build', 'done');
+
+    var errors = stats.compilation.errors;
+    if (errors && errors.length) {
+      errors.forEach(function(err) {
+        log.error('error', err.message);
+      })
+    }
+
     // We are now on valid state
     state = true;
     // Do the stuff in nextTick, because bundle may be invalidated
@@ -55,6 +74,7 @@ module.exports = function(compiler, options, pkg) {
 
   // on compiling
   function invalidPlugin() {
+    log.info('build', 'compile & invalid');
     if(state && (!options.noInfo && !options.quiet))
       console.info("webpack: bundle is now INVALID.");
     // We are now in invalid state
@@ -123,10 +143,10 @@ module.exports = function(compiler, options, pkg) {
   }
 
   // The middleware function
-  function webpackDevMiddleware(req, res, next) {
+  function *webpackDevMiddleware(next) {
     var prefix  = require('./utils').getPrefix(pkg);
-    var url = req.url;
-    if (prefix && req.url.indexOf(prefix) === -1) {
+    var url = this.url;
+    if (prefix && this.url.indexOf(prefix) === -1) {
       url = '/' + prefix + url.slice(1);
     }
 
@@ -135,10 +155,11 @@ module.exports = function(compiler, options, pkg) {
     log.debug(filename);
 
     // in lazy mode, rebuild on bundle request
-    if(options.lazy && filename === pathJoin(compiler.outputPath, options.filename))
+    if(options.lazy && filename === pathJoin(compiler.outputPath, options.filename)) {
       rebuild();
+    }
     // delay the request until we have a vaild bundle
-    ready(function() {
+    //ready(function() {
 
       try {
         var stat = fs.statSync(filename);
@@ -152,20 +173,20 @@ module.exports = function(compiler, options, pkg) {
           }
         }
       } catch(e) {
-        return next();
+        return yield next;
       }
 
       // server content
       var content = fs.readFileSync(filename);
-      res.setHeader("Access-Control-Allow-Origin", "*"); // To support XHR, etc.
-      res.setHeader("Content-Type", mime.lookup(filename));
+      this.set("Access-Control-Allow-Origin", "*"); // To support XHR, etc.
+      this.set("Content-Type", mime.lookup(filename));
       if(options.headers) {
         for(var name in options.headers) {
-          res.setHeader(name, options.headers[name]);
+          this.set(name, options.headers[name]);
         }
       }
-      res.end(content);
-    }, req);
+      this.body = content;
+    //}, this);
   }
 
   webpackDevMiddleware.getFilenameFromUrl = getFilenameFromUrl;
@@ -182,4 +203,4 @@ module.exports = function(compiler, options, pkg) {
   webpackDevMiddleware.fileSystem = fs;
 
   return webpackDevMiddleware;
-}
+};

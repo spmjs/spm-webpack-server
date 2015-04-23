@@ -1,37 +1,40 @@
 'use strict';
 
 var combo = require('combo-url');
-var request = require('request');
-var async = require('async');
+var request = require('co-request');
 var log = require('spm-log');
 
 module.exports = function(opts) {
 
-  return function(req, res, next) {
+  return function*(next){
 
-    var url = decodeURIComponent(req.url);
+    var url = decodeURIComponent(this.url);
 
     if (!combo.isCombo(url)) {
-      return next();
+      return yield next;
     }
 
     var data = combo.parse(url);
+    var ret = [];
 
-    async.mapSeries(data.combo, function(item, callback) {
-      var _url = req.protocol + '://' + opts.hostname + ':' + opts.port + item;
+    for (var i=0; i<data.combo.length; i++) {
+      var item = data.combo[i];
+      var _url = this.protocol + '://' + opts.hostname + ':' + opts.port + item;
 
       log.info('combo', 'fetch', _url);
-      request(_url, function(err, result) {
-        if (result.statusCode === 404) {
-          log.error('combo', '404', _url);
-          res.status(404).send('Not found: ' + _url);
-        } else {
-          callback(null, result.body);
-        }
-      });
-    }, function(err, result) {
-      res.end(result.join('\n'));
-    });
+      var result = yield request(_url);
+
+      if (result.statusCode === 404) {
+        debug('404: ', _url);
+        this.status = 404;
+        this.body = 'Not Found:\n' + _url;
+        return;
+      }
+
+      ret.push(result.body);
+    }
+
+    this.body = ret.join('\n');
   };
 
 };

@@ -139,6 +139,14 @@ module.exports = function(compiler, options) {
     if(filename.indexOf("?") >= 0) {
       filename = filename.substr(0, filename.indexOf("?"));
     }
+
+    var filenameDir = path.dirname(filename);
+    var filenameBase = path.basename(filename);
+
+    var hashInfo = filenameBase.match(/^(\w+)\-[a-z0-9]{20}(\..+)$/i);
+    if (!!hashInfo) {
+      filename = filenameDir + '/' + hashInfo[1] + hashInfo[2];
+    };
     return filename ? pathJoin(compiler.outputPath, filename) : compiler.outputPath;
   }
 

@@ -37,7 +37,11 @@ var args = {
 var sw = require('spm-webpack');
 
 sw.build.getWebpackOpts(args, function(err, webpackOpts) {
-  var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd));
+
+  webpackOpts.output.filename = webpackOpts.output.filename.replace('-[hash]','');
+  webpackOpts.output.chunkFilename = webpackOpts.output.chunkFilename.replace('-[hash]','');;
+
+  var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd,webpackOpts.pkg));
   webpackOpts.devtool = spmArgs.server.devtool;
 
   if (spmArgs.server.define) {

@@ -2,6 +2,10 @@
 
 ---
 
+## 0.3.2
+
+- feat: support hash:true for spm server
+
 ## 0.3.1
 
 - fix: cdn hosts unavailable

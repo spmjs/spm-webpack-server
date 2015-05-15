@@ -2,6 +2,10 @@
 
 ---
 
+## 0.3.3
+
+- fix: local path resolve error if have dest config
+
 ## 0.3.2
 
 - feat: support hash:true for spm server

@@ -146,8 +146,22 @@ module.exports = function(compiler, options) {
     var hashInfo = filenameBase.match(/^(\w+)\-[a-z0-9]{20}(\..+)$/i);
     if (!!hashInfo) {
       filename = filenameDir + '/' + hashInfo[1] + hashInfo[2];
-    };
-    return filename ? pathJoin(compiler.outputPath, filename) : compiler.outputPath;
+    }
+    return filename ? pathJoin(normalizeOutputPath(compiler.outputPath), filename) : compiler.outputPath;
+  }
+
+  function normalizeOutputPath(outputPath) {
+    var originOutputPath = outputPath;
+    outputPath = outputPath.replace(options.cwd, '');
+    if (outputPath.charAt(0) === '/') {
+      outputPath = outputPath.slice(1);
+    }
+    var arr = outputPath.split('/');
+    if (arr.length > 1 && arr[0] === 'dist') {
+      return path.join(process.cwd(), 'dist');
+    } else {
+      return originOutputPath;
+    }
   }
 
   // The middleware function

@@ -55,10 +55,23 @@ sw.build.getWebpackOpts(args, function(err, webpackOpts) {
     webpackOpts.plugins.push(new sw.webpack.DefinePlugin(spmArgs.server.define));
   }
 
-  new Server(sw.webpack(webpackOpts), args).listen(args.port, function(err) {
-    if(err) throw err;
-    log.level = 'info';
-    log.info('webserver', 'listened on', args.port);
+  isPortInUse(args.port, function() {
+    log.error('error', 'port %s is in use', args.port);
+  }, function() {
+    new Server(sw.webpack(webpackOpts), args).listen(args.port, function(err) {
+      if(err) throw err;
+      log.level = 'info';
+      log.info('webserver', 'listened on', args.port);
+    });
   });
 
 });
+
+function isPortInUse(port, error, success) {
+  var conn = require('net').createServer();
+  conn.unref();
+  conn.on('error', error.bind(null, port));
+  conn.listen(port, function() {
+    conn.close(success.bind(null, null, conn.address().port));
+  });
+}

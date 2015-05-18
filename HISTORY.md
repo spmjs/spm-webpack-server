@@ -2,6 +2,11 @@
 
 ---
 
+## 0.3.4
+
+- feat: add POST support for static middleware
+- chore: throw error if port is in use
+
 ## 0.3.3
 
 - fix: local path resolve error if have dest config

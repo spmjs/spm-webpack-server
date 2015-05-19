@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "name": "hello",
+  "spm": {
+    "output": [
+      "a.js"
+    ],
+    "extractCSS": true
+  }
+  
+}

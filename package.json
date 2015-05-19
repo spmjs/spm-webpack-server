@@ -26,11 +26,12 @@
     "weinre": "~2.0.0-pre-I0Z7U9OV"
   },
   "devDependencies": {
+    "coveralls": "2",
     "istanbul": "0",
     "jshint": "2",
-    "coveralls": "2",
     "mocha": "1",
-    "should": "3"
+    "should": "3",
+    "supertest": "~1.0.1"
   },
   "repository": {
     "type": "git",

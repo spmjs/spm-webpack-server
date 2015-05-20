@@ -10,12 +10,18 @@ var log = require('spm-log');
 var join = path.join;
 var readFile = fs.readFileSync;
 var url = require('url');
+var util = require('util');
+var events = require('events');
 
 function Server(compiler, opts) {
+  events.EventEmitter.call(this);
+
   opts = opts || {};
   this.headers = opts.headers;
 
   compiler.plugin('done', function(stats) {
+    this.emit('done');
+
     if (opts.livereload) {
       try {
         var items = Object.keys(stats.compilation.assets);
@@ -25,7 +31,7 @@ function Server(compiler, opts) {
         console.log(e);
       }
     }
-  });
+  }.bind(this));
 
   var ip = require('internal-ip')();
 
@@ -142,5 +148,7 @@ Server.prototype.use = function(gen) {
 Server.prototype.listen = function() {
   this.listeningApp.listen.apply(this.listeningApp, arguments);
 };
+
+util.inherits(Server, events.EventEmitter);
 
 module.exports = Server;

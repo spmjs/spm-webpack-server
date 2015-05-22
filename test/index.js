@@ -7,6 +7,10 @@ var fixtures = join(__dirname, 'fixtures');
 var log = require('spm-log');
 var spmArgv = require('spm-argv');
 var extend = require('extend');
+var fs = require("fs");
+var existsSync = fs.existsSync;
+var readFileSync = fs.readFileSync;
+
 
 describe('server-with-pkg-name', function() {
 
@@ -18,11 +22,12 @@ describe('server-with-pkg-name', function() {
       cwd : join(fixtures, 'server-with-pkg-name')
     };
     process.chdir(args.cwd);
+    var pkgFile = join(args.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+      args.pkg.spm.hash = false;
+    }
     sw.build.getWebpackOpts(args, function (err, webpackOpts) {
-
-      webpackOpts.output.filename = webpackOpts.output.filename.replace('-[hash]','');
-      webpackOpts.output.chunkFilename = webpackOpts.output.chunkFilename.replace('-[hash]','');
-
       var server = new Server(sw.webpack(webpackOpts), args);
       app = server.app;
       server.once('done', done);
@@ -49,7 +54,7 @@ describe('server-with-pkg-name', function() {
 
 });
 
-xdescribe('server-with-pkg-version', function() {
+describe('server-with-pkg-version', function() {
 
   var app = null;
   var args = null;
@@ -59,12 +64,15 @@ xdescribe('server-with-pkg-version', function() {
       cwd : join(fixtures, 'server-with-pkg-version')
     };
     process.chdir(args.cwd);
+    var pkgFile = join(args.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+      args.pkg.spm.hash = false;
+    }
     sw.build.getWebpackOpts(args, function (err, webpackOpts) {
-
-      webpackOpts.output.filename = webpackOpts.output.filename.replace('-[hash]','');
-      webpackOpts.output.chunkFilename = webpackOpts.output.chunkFilename.replace('-[hash]','');
-      app = (new Server(sw.webpack(webpackOpts), args)).app;
-      done();
+      var server = new Server(sw.webpack(webpackOpts), args);
+      app = server.app;
+      server.once('done', done);
     });
   });
 
@@ -88,7 +96,7 @@ xdescribe('server-with-pkg-version', function() {
 
 });
 
-xdescribe('server-with-pkg-name-and-version', function() {
+describe('server-with-pkg-name-and-version', function() {
 
   var app = null;
   var args = null;
@@ -98,12 +106,15 @@ xdescribe('server-with-pkg-name-and-version', function() {
       cwd : join(fixtures, 'server-with-pkg-name-and-version')
     };
     process.chdir(args.cwd);
+    var pkgFile = join(args.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+      args.pkg.spm.hash = false;
+    }
     sw.build.getWebpackOpts(args, function (err, webpackOpts) {
-
-      webpackOpts.output.filename = webpackOpts.output.filename.replace('-[hash]','');
-      webpackOpts.output.chunkFilename = webpackOpts.output.chunkFilename.replace('-[hash]','');
-      app = (new Server(sw.webpack(webpackOpts), args)).app;
-      done();
+      var server = new Server(sw.webpack(webpackOpts), args);
+      app = server.app;
+      server.once('done', done);
     });
   });
 
@@ -127,7 +138,7 @@ xdescribe('server-with-pkg-name-and-version', function() {
 
 });
 
-xdescribe('server-with-pkg-hash-is-enabled', function() {
+describe('server-with-pkg-hash-is-enabled', function() {
 
   var app = null;
   var args = null;
@@ -137,27 +148,30 @@ xdescribe('server-with-pkg-hash-is-enabled', function() {
       cwd : join(fixtures, 'server-with-pkg-hash-is-enabled')
     };
     process.chdir(args.cwd);
+    var pkgFile = join(args.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+      args.pkg.spm.hash = false;
+    }
     sw.build.getWebpackOpts(args, function (err, webpackOpts) {
-
-      webpackOpts.output.filename = webpackOpts.output.filename.replace('-[hash]','');
-      webpackOpts.output.chunkFilename = webpackOpts.output.chunkFilename.replace('-[hash]','');
-      app = (new Server(sw.webpack(webpackOpts), args)).app;
-      done();
+      var server = new Server(sw.webpack(webpackOpts), args);
+      app = server.app;
+      server.once('done', done);
     });
   });
 
-  it('get /hello/0.0.1/a-1bf5f00786e2ac980fde.js', function(done) {
+  it('get /hello/0.0.1/a-91b41dcd96c9d90587eb.js', function(done) {
       request(app.listen())
-      .get('/hello/0.0.1/a-1bf5f00786e2ac980fde.js')
+      .get('/hello/0.0.1/a-91b41dcd96c9d90587eb.js')
       .end(function(err, res){
         if (err) return done(err);
         done()
       });
   });
 
-  it('get /hello/0.0.1/a-1bf5f00786e2ac980fde.css', function(done) {
+  it('get /hello/0.0.1/a.css', function(done) {
       request(app.listen())
-      .get('/hello/0.0.1/a-1bf5f00786e2ac980fde.css')
+      .get('/hello/0.0.1/a.css')
       .end(function(err, res){
         if (err) return done(err);
         done()

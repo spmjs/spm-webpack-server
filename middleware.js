@@ -30,7 +30,6 @@ module.exports = function(compiler, options) {
 
   compiler.plugin("done", function(stats) {
     log.info('build', 'done');
-
     var errors = stats.compilation.errors;
     if (errors && errors.length) {
       errors.forEach(function(err) {
@@ -142,7 +141,6 @@ module.exports = function(compiler, options) {
 
     var filenameDir = path.dirname(filename);
     var filenameBase = path.basename(filename);
-
     var hashInfo = filenameBase.match(/^(\w+)\-[a-z0-9]{20}(\..+)$/i);
     if (!!hashInfo) {
       filename = filenameDir + '/' + hashInfo[1] + hashInfo[2];

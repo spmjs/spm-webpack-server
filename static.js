@@ -3,6 +3,8 @@
  * Module dependencies.
  */
 
+'use strict';
+
 var resolve = require('path').resolve;
 var assert = require('assert');
 var debug = require('debug')('koa-static');
@@ -35,7 +37,7 @@ function serve(root, opts) {
 
   if (!opts.defer) {
     return function *serve(next){
-      if (this.method == 'HEAD' || this.method == 'GET' || this.method == 'POST') {
+      if (this.method === 'HEAD' || this.method === 'GET' || this.method === 'POST') {
         if (yield send(this, this.path, opts)) return;
       }
       yield* next;
@@ -45,9 +47,9 @@ function serve(root, opts) {
   return function *serve(next){
     yield* next;
 
-    if (this.method != 'HEAD' && this.method != 'GET' || this.method == 'POST') return;
+    if (this.method !== 'HEAD' && this.method !== 'GET' || this.method === 'POST') return;
     // response is already handled
-    if (this.body != null || this.status != 404) return;
+    if (this.body != null || this.status !== 404) return;
 
     yield send(this, this.path, opts);
   };

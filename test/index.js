@@ -4,10 +4,10 @@ var request = require('supertest');
 var Server = require('..');
 var sw = require('spm-webpack');
 var fixtures = join(__dirname, 'fixtures');
-var log = require('spm-log');
-var spmArgv = require('spm-argv');
-var extend = require('extend');
-var fs = require("fs");
+//var log = require('spm-log');
+//var spmArgv = require('spm-argv');
+//var extend = require('extend');
+var fs = require('fs');
 var existsSync = fs.existsSync;
 var readFileSync = fs.readFileSync;
 
@@ -37,18 +37,18 @@ describe('server-with-pkg-name', function() {
   it('get /hello/a.js', function(done) {
       request(app.listen())
       .get('/hello/a.js')
-      .end(function(err, res){
+      .end(function(err){
         if (err) return done(err);
-        done()
+        done();
       });
   });
 
   it('get /hello/a.css', function(done) {
       request(app.listen())
       .get('/hello/a.css')
-      .end(function(err, res){
+      .end(function(err){
         if (err) return done(err);
-        done()
+        done();
       });
   });
 
@@ -79,18 +79,18 @@ describe('server-with-pkg-version', function() {
   it('get /0.0.1/a.js', function(done) {
       request(app.listen())
       .get('/0.0.1/a.js')
-      .end(function(err, res){
+      .end(function(err){
         if (err) return done(err);
-        done()
+        done();
       });
   });
 
   it('get /0.0.1/a.css', function(done) {
       request(app.listen())
       .get('/0.0.1/a.css')
-      .end(function(err, res){
+      .end(function(err){
         if (err) return done(err);
-        done()
+        done();
       });
   });
 
@@ -121,18 +121,18 @@ describe('server-with-pkg-name-and-version', function() {
   it('get /hello/0.0.1/a.js', function(done) {
       request(app.listen())
       .get('/hello/0.0.1/a.js')
-      .end(function(err, res){
+      .end(function(err){
         if (err) return done(err);
-        done()
+        done();
       });
   });
 
   it('get /hello/0.0.1/a.css', function(done) {
       request(app.listen())
       .get('/hello/0.0.1/a.css')
-      .end(function(err, res){
+      .end(function(err){
         if (err) return done(err);
-        done()
+        done();
       });
   });
 
@@ -163,18 +163,18 @@ describe('server-with-pkg-hash-is-enabled', function() {
   it('get /hello/0.0.1/a-91b41dcd96c9d90587eb.js', function(done) {
       request(app.listen())
       .get('/hello/0.0.1/a-91b41dcd96c9d90587eb.js')
-      .end(function(err, res){
+      .end(function(err){
         if (err) return done(err);
-        done()
+        done();
       });
   });
 
   it('get /hello/0.0.1/a.css', function(done) {
       request(app.listen())
       .get('/hello/0.0.1/a.css')
-      .end(function(err, res){
+      .end(function(err){
         if (err) return done(err);
-        done()
+        done();
       });
   });
 

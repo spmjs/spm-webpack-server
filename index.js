@@ -128,12 +128,11 @@ function Server(compiler, opts) {
     });
   }
 
-  this.listeningApp = opts.https
-    ? https.createServer({
+  this.listeningApp = opts.https ? https.createServer({
     // using built-in self-signed certificate
-    key: opts.key || fs.readFileSync(path.join(__dirname, "./ssl/server.key")),
-    cert: opts.cert || fs.readFileSync(path.join(__dirname, "./ssl/server.crt")),
-    ca: opts.ca || fs.readFileSync(path.join(__dirname, "./ssl/ca.crt")),
+    key: opts.key || fs.readFileSync(path.join(__dirname, './ssl/server.key')),
+    cert: opts.cert || fs.readFileSync(path.join(__dirname, './ssl/server.crt')),
+    ca: opts.ca || fs.readFileSync(path.join(__dirname, './ssl/ca.crt')),
     requestCert: true,
     rejectUnauthorized: false
   }, app.callback())

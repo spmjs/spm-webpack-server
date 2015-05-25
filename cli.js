@@ -10,7 +10,7 @@ var extend = require('extend');
 var Server = require('./index');
 var path = require('path');
 var join = path.join;
-var fs = require("fs");
+var fs = require('fs');
 var existsSync = fs.existsSync;
 var readFileSync = fs.readFileSync;
 

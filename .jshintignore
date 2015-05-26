@@ -3,3 +3,4 @@ coverage
 test/fixtures
 test/expected
 tmp
+rule.js

@@ -25,7 +25,7 @@ module.exports = function(opts) {
       var result = yield request(_url);
 
       if (result.statusCode === 404) {
-        debug('404: ', _url);
+        log.info('404: ', _url);
         this.status = 404;
         this.body = 'Not Found:\n' + _url;
         return;

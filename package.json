@@ -1,6 +1,6 @@
 {
   "name": "spm-webpack-server",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "Server for spm projects.",
   "main": "index",
   "dependencies": {

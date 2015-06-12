@@ -2,6 +2,10 @@
 
 ---
 
+## 0.4.0
+
+- deps: upgrade spm-webpack to 0.4.0
+
 ## 0.3.4
 
 - feat: add POST support for static middleware

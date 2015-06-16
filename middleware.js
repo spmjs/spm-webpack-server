@@ -22,7 +22,7 @@ module.exports = function(compiler, options) {
   if(!options.stats.context) options.stats.context = process.cwd();
 
   var pkg;
-  var pkgFile = join(options.cwd, 'package.json');
+  var pkgFile = options.pkg || join(options.cwd, 'package.json');
   if (existsSync(pkgFile)) {
     pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
   }
@@ -168,6 +168,7 @@ module.exports = function(compiler, options) {
 
   // The middleware function
   function *webpackDevMiddleware(next) {
+    log.info('request', this.url);
     /*jshint validthis:true */
     var prefix  = require('./utils').getPrefix(pkg);
     var url = this.url;
@@ -176,8 +177,8 @@ module.exports = function(compiler, options) {
     }
 
     var filename = getFilenameFromUrl(url);
-    if (filename === false) return next();
-    log.debug(filename);
+    log.info('file found', filename);
+    if (filename === false) return yield next;
 
     // in lazy mode, rebuild on bundle request
     if(options.lazy && filename === pathJoin(compiler.outputPath, options.filename)) {

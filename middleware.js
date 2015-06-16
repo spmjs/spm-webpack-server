@@ -168,8 +168,8 @@ module.exports = function(compiler, options) {
 
   // The middleware function
   function *webpackDevMiddleware(next) {
-    log.info('request', this.url);
     /*jshint validthis:true */
+    log.info('request', this.url);
     var prefix  = require('./utils').getPrefix(pkg);
     var url = this.url;
     if (prefix && this.url.indexOf(prefix) === -1) {

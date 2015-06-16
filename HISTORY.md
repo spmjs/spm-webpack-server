@@ -2,6 +2,10 @@
 
 ---
 
+## 0.4.1
+
+- feat: pkg can be pass in with arguments
+
 ## 0.4.0
 
 - deps: upgrade spm-webpack to 0.4.0

@@ -2,6 +2,10 @@
 
 ---
 
+## 0.4.2
+
+- bugfix: fix pkg logic
+
 ## 0.4.1
 
 - feat: pkg can be pass in with arguments

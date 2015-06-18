@@ -21,10 +21,12 @@ module.exports = function(compiler, options) {
   if(typeof options.stats === 'undefined') options.stats = {};
   if(!options.stats.context) options.stats.context = process.cwd();
 
-  var pkg;
-  var pkgFile = options.pkg || join(options.cwd, 'package.json');
-  if (existsSync(pkgFile)) {
-    pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+  var pkg = options.pkg;
+  if (!pkg) {
+    var pkgFile = join(options.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+    }
   }
 
   // store our files in memory

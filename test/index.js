@@ -19,7 +19,8 @@ describe('server-with-pkg-name', function() {
 
   before(function (done) {
     args = {
-      cwd : join(fixtures, 'server-with-pkg-name')
+      cwd : join(fixtures, 'server-with-pkg-name'),
+      debug : true
     };
     process.chdir(args.cwd);
     var pkgFile = join(args.cwd, 'package.json');
@@ -37,6 +38,9 @@ describe('server-with-pkg-name', function() {
   it('get /hello/a.js', function(done) {
       request(app.listen())
       .get('/hello/a.js')
+      .expect(function(res){
+        if(res.text.indexOf('/******/ (function(modules) { // webpackBootstraps') === 0) throw new Error('Missing webpackBootstrap');
+      })
       .end(function(err){
         if (err) return done(err);
         done();
@@ -61,7 +65,8 @@ describe('server-with-pkg-version', function() {
 
   before(function (done) {
     args = {
-      cwd : join(fixtures, 'server-with-pkg-version')
+      cwd : join(fixtures, 'server-with-pkg-version'),
+      debug : true
     };
     process.chdir(args.cwd);
     var pkgFile = join(args.cwd, 'package.json');
@@ -79,6 +84,9 @@ describe('server-with-pkg-version', function() {
   it('get /0.0.1/a.js', function(done) {
       request(app.listen())
       .get('/0.0.1/a.js')
+      .expect(function(res){
+        if(res.text.indexOf('/******/ (function(modules) { // webpackBootstraps') === 0) throw new Error('Missing webpackBootstrap');
+      })
       .end(function(err){
         if (err) return done(err);
         done();
@@ -103,7 +111,8 @@ describe('server-with-pkg-name-and-version', function() {
 
   before(function (done) {
     args = {
-      cwd : join(fixtures, 'server-with-pkg-name-and-version')
+      cwd : join(fixtures, 'server-with-pkg-name-and-version'),
+      debug : true
     };
     process.chdir(args.cwd);
     var pkgFile = join(args.cwd, 'package.json');
@@ -121,6 +130,9 @@ describe('server-with-pkg-name-and-version', function() {
   it('get /hello/0.0.1/a.js', function(done) {
       request(app.listen())
       .get('/hello/0.0.1/a.js')
+      .expect(function(res){
+        if(res.text.indexOf('/******/ (function(modules) { // webpackBootstraps') === 0) throw new Error('Missing webpackBootstrap');
+      })
       .end(function(err){
         if (err) return done(err);
         done();
@@ -145,7 +157,8 @@ describe('server-with-pkg-hash-is-enabled', function() {
 
   before(function (done) {
     args = {
-      cwd : join(fixtures, 'server-with-pkg-hash-is-enabled')
+      cwd : join(fixtures, 'server-with-pkg-hash-is-enabled'),
+      debug : true
     };
     process.chdir(args.cwd);
     var pkgFile = join(args.cwd, 'package.json');
@@ -163,6 +176,9 @@ describe('server-with-pkg-hash-is-enabled', function() {
   it('get /hello/0.0.1/a-91b41dcd96c9d90587eb.js', function(done) {
       request(app.listen())
       .get('/hello/0.0.1/a-91b41dcd96c9d90587eb.js')
+      .expect(function(res){
+        if(res.text.indexOf('/******/ (function(modules) { // webpackBootstraps') === 0) throw new Error('Missing webpackBootstrap');
+      })
       .end(function(err){
         if (err) return done(err);
         done();

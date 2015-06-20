@@ -2,6 +2,11 @@
 
 ---
 
+## 0.5.0
+
+- deps: upgrade spm-webpack to 0.5.0
+- fix: path error when options.cwd != process.cwd()
+
 ## 0.4.2
 
 - bugfix: fix pkg logic

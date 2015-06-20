@@ -162,7 +162,7 @@ module.exports = function(compiler, options) {
     }
     var arr = outputPath.split('/');
     if (arr.length > 1 && arr[0] === 'dist') {
-      return path.join(process.cwd(), 'dist');
+      return path.join(options.cwd, 'dist');
     } else {
       return originOutputPath;
     }
@@ -171,7 +171,7 @@ module.exports = function(compiler, options) {
   // The middleware function
   function *webpackDevMiddleware(next) {
     /*jshint validthis:true */
-    log.info('request', this.url);
+    if (!options.noRequestLog) log.info('request', this.url);
     var prefix  = require('./utils').getPrefix(pkg);
     var url = this.url;
     if (prefix && this.url.indexOf(prefix) === -1) {
@@ -179,7 +179,7 @@ module.exports = function(compiler, options) {
     }
 
     var filename = getFilenameFromUrl(url);
-    log.info('file found', filename);
+    log.debug('file parsed', filename);
     if (filename === false) return yield next;
 
     // in lazy mode, rebuild on bundle request
@@ -201,8 +201,11 @@ module.exports = function(compiler, options) {
           }
         }
       } catch(e) {
+        log.debug('file not found');
         return yield next;
       }
+
+      if (!options.noRequestLog) log.info('file found', filename);
 
       // server content
       var content = fs.readFileSync(filename);

@@ -47,8 +47,12 @@ function Server(compiler, opts) {
     file = join(opts.cwd, file);
     var isHTML = /\.html?$/.test(this.url);
 
-    if (isHTML && (opts.livereload || opts.weinre)) {
+    if (isHTML && (opts.livereload || opts.weinre || global.SPM_SERVER_HTTP_INJECT)) {
       var content = readFile(file, 'utf-8');
+
+      if (global.SPM_SERVER_HTTP_INJECT) {
+        content = global.SPM_SERVER_HTTP_INJECT + content;
+      }
       if (opts.livereload) {
         content = content + '<script src="http://' + ip + ':35729/livereload.js"></script>';
       }

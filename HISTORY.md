@@ -2,6 +2,10 @@
 
 ---
 
+## 0.5.1
+
+- feat: add spm server http inject feature
+
 ## 0.5.0
 
 - deps: upgrade spm-webpack to 0.5.0

@@ -72,7 +72,9 @@ function Server(compiler, opts) {
 
   app.use(webpackDevMiddleware(compiler, opts));
 
-  app.use(require('./static')(opts.cwd));
+  app.use(require('./static')(opts.cwd, {
+    index: 'dont-have-index.xxxx'
+  }));
   app.use(require('koa-serve-index')(opts.cwd, {
     hidden: true,
     view: 'details'

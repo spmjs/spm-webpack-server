@@ -2,6 +2,10 @@
 
 ---
 
+## 0.5.2
+
+- feat: don't serve index.html as default
+
 ## 0.5.1
 
 - feat: add spm server http inject feature

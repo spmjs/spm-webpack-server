@@ -148,7 +148,7 @@ module.exports = function(compiler, options) {
 
     //remove name and version info from filename
     var delPrefix = (options.pkg.name ? options.pkg.name + '/' : '') + (options.pkg.version ? options.pkg.version + '/' : '');
-    if(delPrefix != '' && filename.indexOf(delPrefix) == 0) {
+    if(delPrefix !== '' && filename.indexOf(delPrefix) === 0) {
       filename = filename.substr(delPrefix.length);
     }
 
@@ -158,23 +158,22 @@ module.exports = function(compiler, options) {
     if (!!hashInfo) {
       filename = filenameDir + '/' + hashInfo[1] + hashInfo[2];
     }
-    return filename ? pathJoin(normalizeOutputPath(compiler.outputPath), filename) : compiler.outputPath;
+    return filename ? pathJoin(compiler.outputPath, filename) : compiler.outputPath;
   }
 
-  function normalizeOutputPath(outputPath) {
-    var originOutputPath = outputPath;
-    outputPath = outputPath.replace(options.cwd, '');
-    if (outputPath.charAt(0) === '/') {
-      outputPath = outputPath.slice(1);
-    }
-    //var arr = outputPath.split('/');
-    //if (arr.length > 1 && arr[0] === 'dist') {
-    //  return path.join(options.cwd, 'dist');
-    //} else {
-    //  return originOutputPath;
-    //}
-    return originOutputPath
-  }
+  //function normalizeOutputPath(outputPath) {
+  //  var originOutputPath = outputPath;
+  //  outputPath = outputPath.replace(options.cwd, '');
+  //  if (outputPath.charAt(0) === '/') {
+  //    outputPath = outputPath.slice(1);
+  //  }
+  //  var arr = outputPath.split('/');
+  //  if (arr.length > 1 && arr[0] === 'dist') {
+  //    return path.join(options.cwd, 'dist');
+  //  } else {
+  //    return originOutputPath;
+  //  }
+  //}
 
   // The middleware function
   function *webpackDevMiddleware(next) {

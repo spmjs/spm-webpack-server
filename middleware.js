@@ -79,13 +79,12 @@ module.exports = function(compiler, options) {
 
   // on compiling
   function invalidPlugin() {
-    log.info('build', 'compile & invalid');
+    log.info('build', 'start');
     if(state && (!options.noInfo && !options.quiet))
       console.info('webpack: bundle is now INVALID.');
     // We are now in invalid state
     state = false;
   }
-  compiler.plugin('invalid', invalidPlugin);
   compiler.plugin('compile', invalidPlugin);
 
   // the state, false: bundle invalid, true: bundle valid

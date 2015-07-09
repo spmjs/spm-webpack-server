@@ -2,6 +2,10 @@
 
 ---
 
+## 0.5.3
+
+- fix: outputPath resolve error when is like dist/...
+
 ## 0.5.2
 
 - feat: don't serve index.html as default

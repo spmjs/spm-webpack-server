@@ -196,3 +196,61 @@ describe('server-with-pkg-hash-is-enabled', function() {
 
 });
 
+describe('server-with-specify-dest', function() {
+
+  var app = null;
+  var args = null;
+
+  before(function (done) {
+    args = {
+      cwd : join(fixtures, 'server-with-specify-dest'),
+      debug : true
+    };
+    process.chdir(args.cwd);
+    var pkgFile = join(args.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+      args.pkg.spm.hash = false;
+    }
+    sw.build.getWebpackOpts(args, function (err, webpackOpts) {
+      var server = new Server(sw.webpack(webpackOpts), args);
+      app = server.app;
+      server.once('done', done);
+    });
+  });
+
+  it('get /a/0.1.0/src/a.js', function(done) {
+    request(app.listen())
+      .get('/a/0.1.0/src/a.js')
+      .expect(function(res){
+        if(res.text.indexOf('/******/ (function(modules) { // webpackBootstraps') === 0) throw new Error('Missing webpackBootstrap');
+      })
+      .end(function(err){
+        if (err) return done(err);
+        done();
+      });
+  });
+
+  it('get /src/a.js', function(done) {
+    request(app.listen())
+      .get('/src/a.js')
+      .expect(function(res){
+        if(res.text.indexOf('/******/ (function(modules) { // webpackBootstraps') === 0) throw new Error('Missing webpackBootstrap');
+      })
+      .end(function(err){
+        if (err) return done(err);
+        done();
+      });
+  });
+
+  it('get /a/0.1.0/src/a.css', function(done) {
+    request(app.listen())
+      .get('/a/0.1.0/src/a.css')
+      .end(function(err){
+        if (err) return done(err);
+        done();
+      });
+  });
+
+});
+

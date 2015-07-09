@@ -16,6 +16,7 @@ var readFileSync = fs.readFileSync;
 
 // constructor for the middleware
 module.exports = function(compiler, options) {
+
   if(!options) options = {};
   if(options.watchDelay === undefined) options.watchDelay = 200;
   if(typeof options.stats === 'undefined') options.stats = {};
@@ -145,28 +146,34 @@ module.exports = function(compiler, options) {
       filename = filename.substr(0, filename.indexOf('?'));
     }
 
+    //remove name and version info from filename
+    var delPrefix = (options.pkg.name ? options.pkg.name + '/' : '') + (options.pkg.version ? options.pkg.version + '/' : '');
+    if(delPrefix !== '' && filename.indexOf(delPrefix) === 0) {
+      filename = filename.substr(delPrefix.length);
+    }
+
     var filenameDir = path.dirname(filename);
     var filenameBase = path.basename(filename);
     var hashInfo = filenameBase.match(/^(\w+)\-[a-z0-9]{20}(\..+)$/i);
     if (!!hashInfo) {
       filename = filenameDir + '/' + hashInfo[1] + hashInfo[2];
     }
-    return filename ? pathJoin(normalizeOutputPath(compiler.outputPath), filename) : compiler.outputPath;
+    return filename ? pathJoin(compiler.outputPath, filename) : compiler.outputPath;
   }
 
-  function normalizeOutputPath(outputPath) {
-    var originOutputPath = outputPath;
-    outputPath = outputPath.replace(options.cwd, '');
-    if (outputPath.charAt(0) === '/') {
-      outputPath = outputPath.slice(1);
-    }
-    var arr = outputPath.split('/');
-    if (arr.length > 1 && arr[0] === 'dist') {
-      return path.join(options.cwd, 'dist');
-    } else {
-      return originOutputPath;
-    }
-  }
+  //function normalizeOutputPath(outputPath) {
+  //  var originOutputPath = outputPath;
+  //  outputPath = outputPath.replace(options.cwd, '');
+  //  if (outputPath.charAt(0) === '/') {
+  //    outputPath = outputPath.slice(1);
+  //  }
+  //  var arr = outputPath.split('/');
+  //  if (arr.length > 1 && arr[0] === 'dist') {
+  //    return path.join(options.cwd, 'dist');
+  //  } else {
+  //    return originOutputPath;
+  //  }
+  //}
 
   // The middleware function
   function *webpackDevMiddleware(next) {
@@ -232,6 +239,5 @@ module.exports = function(compiler, options) {
   };
 
   webpackDevMiddleware.fileSystem = fs;
-
   return webpackDevMiddleware;
 };

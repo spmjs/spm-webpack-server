@@ -39,32 +39,40 @@ var args = {
 };
 
 var sw = require('spm-webpack');
+
+// 获取 package.json
 var pkgFile = join(cwd, 'package.json');
 if (existsSync(pkgFile)) {
   args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
   args.pkg.spm.hash = false;
 }
-args.fromServer = true;
-sw.build.getWebpackOpts(args, function(err, webpackOpts) {
 
-  var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd,webpackOpts.pkg));
-  webpackOpts.devtool = spmArgs.server.devtool;
+// fromServer 在 spm-webpack 里会启动 copy 文件的 watch 模式
+args.fromServer = true;
+
+// 安装依赖
+sw.build.installDeps(args, function() {
+
+  var wpOpts = sw.build.getWebpackOpts(args);
+
+  var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd,wpOpts.pkg));
+  wpOpts.devtool = spmArgs.server.devtool;
 
   if (spmArgs.server.define) {
-    for (var i=0; i<webpackOpts.plugins.length; i++) {
-      var p = webpackOpts.plugins[i];
+    for (var i=0; i<wpOpts.plugins.length; i++) {
+      var p = wpOpts.plugins[i];
       if (p.definitions) {
-        webpackOpts.plugins.splice(i, 1);
+        wpOpts.plugins.splice(i, 1);
         break;
       }
     }
-    webpackOpts.plugins.push(new sw.webpack.DefinePlugin(spmArgs.server.define));
+    wpOpts.plugins.push(new sw.webpack.DefinePlugin(spmArgs.server.define));
   }
 
   isPortInUse(args.port, function() {
     log.error('error', 'port %s is in use', args.port);
   }, function() {
-    var server = new Server(sw.webpack(webpackOpts), args);
+    var server = new Server(sw.webpack(wpOpts), args);
     server.app.listen(args.port, function(err) {
       if(err) throw err;
       log.info('webserver', 'listened on', args.port);

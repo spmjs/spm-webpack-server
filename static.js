@@ -38,7 +38,6 @@ function serve(root, opts) {
   if (!opts.defer) {
     return function *serve(next){
       if (this.method === 'HEAD' || this.method === 'GET' || this.method === 'POST') {
-        var a = yield send(this, this.path, opts);
         if (yield send(this, this.path, opts)) return;
       }
       yield* next;

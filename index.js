@@ -36,6 +36,7 @@ function Server(compiler, opts) {
 
   var app = this.app = koa();
 
+  // combo 拆分
   app.use(require('./combo')({
     hostname: ip,
     port: opts.port
@@ -112,16 +113,21 @@ function Server(compiler, opts) {
     }
   });
 
+  // 静态资源
   app.use(require('./static')(opts.cwd, {
     index: 'dont-have-index.xxxx'
   }));
+
+  // 目录访问
   app.use(require('koa-serve-index')(opts.cwd, {
     hidden: true,
     view: 'details'
   }));
 
+  // cdn 反向代理
   app.use(require('./cdn')());
 
+  // weinre 服务器
   if (opts.weinre) {
     require('coffee-script');
     require('weinre').run({
@@ -136,6 +142,7 @@ function Server(compiler, opts) {
     });
   }
 
+  // livereload 服务器
   if (opts.livereload) {
     var lrServer = require('tiny-lr')();
     lrServer.listen(35729, function(err) {
@@ -147,6 +154,7 @@ function Server(compiler, opts) {
     });
   }
 
+  // anyproxy 代理
   if (opts.proxy) {
     var anyproxy;
     try {
@@ -174,6 +182,7 @@ function Server(compiler, opts) {
     });
   }
 
+  // https 支持
   this.listeningApp = opts.https ? https.createServer({
     // using built-in self-signed certificate
     key: opts.key || fs.readFileSync(path.join(__dirname, './ssl/server.key')),

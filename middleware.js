@@ -13,7 +13,7 @@ function middleware(doIt, req, res) {
     doIt(req, res, function () {
       done(null, 1);
     });
-  }
+  };
 }
 
 module.exports = function (compiler, option) {

@@ -25,7 +25,7 @@ program
   .option('--verbose', 'show more logging')
   .parse(process.argv);
 
-log.config(program);
+//log.config(program);
 
 var cwd = process.cwd();
 var args = {
@@ -35,7 +35,6 @@ var args = {
   weinre: program.weinre,
   livereload: program.livereload,
   proxy: program.proxy,
-  quiet: !program.verbose,
   port: program.port || 8000
 };
 
@@ -45,6 +44,7 @@ if (existsSync(pkgFile)) {
   args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
   args.pkg.spm.hash = false;
 }
+args.fromServer = true;
 sw.build.getWebpackOpts(args, function(err, webpackOpts) {
 
   var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd,webpackOpts.pkg));
@@ -67,7 +67,6 @@ sw.build.getWebpackOpts(args, function(err, webpackOpts) {
     var server = new Server(sw.webpack(webpackOpts), args);
     server.app.listen(args.port, function(err) {
       if(err) throw err;
-      log.level = 'info';
       log.info('webserver', 'listened on', args.port);
     });
   });

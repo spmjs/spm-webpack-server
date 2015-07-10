@@ -1,7 +1,6 @@
 'use strict';
 
 var koa = require('koa');
-var webpackDevMiddleware = require('./middleware');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
@@ -26,7 +25,7 @@ function Server(compiler, opts) {
       try {
         var items = Object.keys(stats.compilation.assets);
         lrServer.changed({body: {files: items}});
-        log.info('livereload', 'changed', items.join(', '));
+        log.warn('livereload', 'changed', items.join(', '));
       } catch (e) {
         console.log(e);
       }
@@ -43,34 +42,75 @@ function Server(compiler, opts) {
   }));
 
   app.use(function *(next) {
-    var file = url.parse(this.url).pathname;
-    file = join(opts.cwd, file);
-    var isHTML = /\.html?$/.test(this.url);
-
-    if (isHTML && (opts.livereload || opts.weinre || global.SPM_SERVER_HTTP_INJECT)) {
-      var content = readFile(file, 'utf-8');
-
-      if (global.SPM_SERVER_HTTP_INJECT) {
-        content = global.SPM_SERVER_HTTP_INJECT + content;
-      }
-      if (opts.livereload) {
-        content = content + '<script src="http://' + ip + ':35729/livereload.js"></script>';
-      }
-      if (opts.weinre) {
-        content = content + '<script src="http://' + ip + ':8990/target/target-script-min.js#anonymous"></script>';
-      }
-      this.body = content;
-    } else {
-      yield next;
-    }
-
     this.set({
       'Access-Control-Allow-Origin': '*',
       'Timing-Allow-Origin': '*'
     });
+
+    this.oldUrl = this.url;
+
+    // 处理 livereload 和 weinre
+    this.htmlPrefix = this.htmlPostfix = '';
+    if (/\.html?$/.test(this.url.split('?')[0])) {
+      if (global.SPM_SERVER_HTTP_INJECT) {
+        this.htmlPrefix = global.SPM_SERVER_HTTP_INJECT;
+      }
+
+      var postFix = [];
+      if (opts.livereload) {
+        postFix.push('<script src="http://' + ip + ':35729/livereload.js"></script>');
+      }
+      if (opts.weinre) {
+        postFix.push('<script src="http://' + ip + ':8990/target/target-script-min.js#anonymous"></script>');
+      }
+      this.htmlPostfix = '\n' + postFix.join('\n');
+    }
+
+    // 替换 /name/version 为空
+    var prefix = [''];
+    if (opts.pkg.name) prefix.push(opts.pkg.name);
+    if (opts.pkg.version) prefix.push(opts.pkg.version);
+    prefix = prefix.join('/');
+
+    if (prefix && this.url.indexOf(prefix) === 0) {
+      this.url = this.url.replace(prefix, '');
+    }
+
+    // 替换 -hash.js 为 .js
+    var m = this.url.match(/^([^-]+)\-[a-z0-9]{20}(\..+)$/i);
+    if (m && m[1]) {
+      this.url = m[1] + m[2];
+    }
+
+    yield next;
   });
 
-  app.use(webpackDevMiddleware(compiler, opts));
+  // webpack 中间件
+  opts.noInfo = true;
+  app.use(require('./middleware')(compiler, opts));
+
+  // 恢复 url 属性
+  app.use(function *(next) {
+    if (this.oldUrl) {
+      this.url = this.oldUrl;
+      delete this.oldUrl;
+    }
+    yield next;
+  });
+
+  // 针对普通静态 html 文件的 fix
+  app.use(function *(next) {
+    var file = url.parse(this.url).pathname;
+    file = join(opts.cwd, file);
+    var isHTML = /\.html?$/.test(this.url);
+    if (isHTML && fs.existsSync(file)) {
+      var content = readFile(file, 'utf-8');
+      content = this.htmlPrefix + content + this.htmlPostfix;
+      this.body = content;
+    } else {
+      yield next;
+    }
+  });
 
   app.use(require('./static')(opts.cwd, {
     index: 'dont-have-index.xxxx'

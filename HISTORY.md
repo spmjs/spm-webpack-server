@@ -2,6 +2,12 @@
 
 ---
 
+## 0.6.0
+
+- deps: upgrade spm-webpack to 0.6.0
+- refactor: using webpack-dev-middleware directly
+- chore: simplify log
+
 ## 0.5.3
 
 - fix: outputPath resolve error when is like dist/...

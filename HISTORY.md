@@ -2,6 +2,11 @@
 
 ---
 
+## 0.7.0
+
+- deps: upgrade spm-webpack to 0.7.0
+- deps: upgrade webpack-dev-middleware to 1.2
+
 ## 0.6.0
 
 - deps: upgrade spm-webpack to 0.6.0

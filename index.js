@@ -11,6 +11,7 @@ var readFile = fs.readFileSync;
 var url = require('url');
 var util = require('util');
 var events = require('events');
+var jsonp = require('koa-jsonp');
 
 function Server(compiler, opts) {
   events.EventEmitter.call(this);
@@ -36,6 +37,10 @@ function Server(compiler, opts) {
 
   var app = this.app = koa();
 
+  // support jsonp
+  if(opts.jsonp) {
+    app.use(jsonp());
+  }
   // combo 拆分
   app.use(require('./combo')({
     hostname: ip,

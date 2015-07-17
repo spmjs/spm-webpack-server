@@ -38,7 +38,7 @@ function Server(compiler, opts) {
   var app = this.app = koa();
 
   // support jsonp
-  if(opts.jsonp || opts.pkg.spm.jsonp) {
+  if(opts.jsonp || (opts.pkg && opts.pkg.spm && opts.pkg.spm.jsonp)) {
     app.use(jsonp());
   }
   // combo 拆分

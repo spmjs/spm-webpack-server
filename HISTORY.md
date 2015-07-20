@@ -2,6 +2,10 @@
 
 ---
 
+## 0.7.1
+
+- feat: support lazy
+
 ## 0.7.0
 
 - deps: upgrade spm-webpack to 0.7.0

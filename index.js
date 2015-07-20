@@ -88,6 +88,9 @@ function Server(compiler, opts) {
 
   // webpack 中间件
   opts.noInfo = true;
+  try {
+    if (opts.pkg.spm.server.lazy) opts.lazy = true;
+  } catch(e) {}
   app.use(require('./middleware')(compiler, opts));
 
   // 恢复 url 属性

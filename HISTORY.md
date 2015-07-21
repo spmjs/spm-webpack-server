@@ -2,9 +2,13 @@
 
 ---
 
+## 0.7.2
+
+- feat: support server.family
+
 ## 0.7.1
 
-- feat: support lazy
+- feat: support server.lazy
 
 ## 0.7.0
 

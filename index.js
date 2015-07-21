@@ -50,6 +50,13 @@ function Server(compiler, opts) {
 
     this.oldUrl = this.url;
 
+    // 替换 server.family
+    if (opts.pkg.spm && opts.pkg.spm.server && opts.pkg.spm.server.family) {
+      var f = opts.pkg.spm.server.family;
+      if (f.charAt(0) !== '/') f = '/' + f;
+      this.url = this.url.replace(new RegExp('^' + f), '');
+    }
+
     // 处理 livereload 和 weinre
     this.htmlPrefix = this.htmlPostfix = '';
     if (/\.html?$/.test(this.url.split('?')[0])) {

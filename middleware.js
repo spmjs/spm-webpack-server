@@ -21,7 +21,11 @@ module.exports = function (compiler, option) {
   return function*(next) {
     var ctx = this;
     var req = this.req;
-    var isHTML = /\.html?$/.test(this.url.split('?')[0]);
+    var url = this.url;
+    if (url === '/') {
+      return yield next; 
+    }
+    var isHTML = /\.html?$/.test(url.split('?')[0]);
     var runNext = yield middleware(doIt, req, {
       end: function (content) {
         // 添加 html fix

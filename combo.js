@@ -35,7 +35,7 @@ module.exports = function(opts) {
         log.error('404', _url);
         this.status = 404;
         this.body = 'Not Found:\n' + _url;
-        return
+        return;
       }
 
       ret.push(result.body);

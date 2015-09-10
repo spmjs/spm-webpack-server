@@ -76,6 +76,10 @@ function Server(compiler, opts) {
 
     // 替换 /name/version 为空
     var prefix = [''];
+    if (opts.pkg.spm.dest) {
+        var dest = opts.pkg.spm.dest;
+        prefix.push(dest.substring(dest.indexOf("/")+1));
+    }
     if (opts.pkg.name) prefix.push(opts.pkg.name);
     if (opts.pkg.version) prefix.push(opts.pkg.version);
     prefix = prefix.join('/');

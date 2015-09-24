@@ -31,11 +31,11 @@ module.exports = function(opts) {
       log.info('combo fetch', _url);
       var result = yield request(_url);
 
-      if (result.statusCode === 404) {
-        log.error('404', _url);
-        this.status = 404;
-        this.body = 'Not Found:\n' + _url;
-        return;
+      if (result.statusCode === 404 || result.statusCode === 204) {
+        log.error('' + result.statusCode, _url)
+        this.status = 404
+        this.body = result.statusMessage + ':\n' + _url
+        return
       }
 
       ret.push(result.body);
@@ -44,6 +44,6 @@ module.exports = function(opts) {
     // Set content-type by the first file in combo request
     this.set('content-type', contentType);
     this.body = ret.join('\n');
-  }
+  };
 
-}
+};

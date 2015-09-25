@@ -2,6 +2,10 @@
 
 ---
 
+## 0.8.0
+
+- feat: Do not build modules in index page and support 204 status  [#10](https://github.com/spmjs/spm-webpack-server/pull/10)
+
 ## 0.7.2
 
 - feat: support server.family
@@ -46,7 +50,7 @@
 
 - feat: pkg can be pass in with arguments
 
-## 0.4.0
+  ## 0.4.0
 
 - deps: upgrade spm-webpack to 0.4.0
 

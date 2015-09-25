@@ -10,7 +10,7 @@ module.exports = function(opts) {
   var contentTypes = {
     '.css': 'text/css',
     '.js': 'application/javascript'
-  }
+  };
 
   return function*(next) {
 
@@ -32,10 +32,10 @@ module.exports = function(opts) {
       var result = yield request(_url);
 
       if (result.statusCode === 404 || result.statusCode === 204) {
-        log.error('' + result.statusCode, _url)
-        this.status = 404
-        this.body = result.statusMessage + ':\n' + _url
-        return
+        log.error('' + result.statusCode, _url);
+        this.status = 404;
+        this.body = result.statusMessage + ':\n' + _url;
+        return;
       }
 
       ret.push(result.body);

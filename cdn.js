@@ -27,6 +27,7 @@ module.exports = function(opts) {
       log.info('cdn', '404', url);
       yield next;
     } else {
+      this.set('Content-Type', result.headers['content-type']);
       this.body = result.body;
     }
 

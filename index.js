@@ -116,7 +116,14 @@ function Server(compiler, opts) {
     var isHTML = /\.html?$/.test(this.url);
     if (isHTML && fs.existsSync(file)) {
       var content = readFile(file, 'utf-8');
-      content = this.htmlPrefix + content + this.htmlPostfix;
+
+      var docTypeReg =  new RegExp('^\s*\<\!DOCTYPE\s*.+\>.*$', 'im');
+      var docType = content.match(docTypeReg);
+      if (docType) {
+        content = content.replace(docTypeReg, docType[0] + this.htmlPrefix);
+      } else {
+        content = this.htmlPrefix + content + this.htmlPostfix;
+      }
       this.body = content;
     } else {
       yield next;

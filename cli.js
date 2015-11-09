@@ -2,7 +2,6 @@
 
 'use strict';
 
-require('gnode');
 var program = require('commander');
 var log = require('spm-log');
 var spmArgv = require('spm-argv');

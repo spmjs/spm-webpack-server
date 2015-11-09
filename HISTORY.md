@@ -2,6 +2,14 @@
 
 ---
 
+## 0.8.2 
+
+- deps: upgrade spm-webpack to 0.8.0
+
+## 0.8.1
+
+- fix:  adjust insert scripts position when html file exists doctype
+
 ## 0.8.0
 
 - feat: Do not build modules in index page and support 204 status  [#10](https://github.com/spmjs/spm-webpack-server/pull/10)

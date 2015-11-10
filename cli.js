@@ -23,6 +23,7 @@ program
   .option('--weinre', 'weinre')
   .option('--https', 'https')
   .option('--verbose', 'show more logging')
+  .option('--jsonp', 'jsonp middleware')
   .parse(process.argv);
 
 //log.config(program);
@@ -35,7 +36,8 @@ var args = {
   weinre: program.weinre,
   livereload: program.livereload,
   proxy: program.proxy,
-  port: program.port || 8000
+  port: program.port || 8000,
+  jsonp: program.jsonp
 };
 
 var sw = require('spm-webpack');

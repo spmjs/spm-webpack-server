@@ -11,6 +11,55 @@ var fs = require('fs');
 var existsSync = fs.existsSync;
 var readFileSync = fs.readFileSync;
 
+describe('server-with-jsonp', function() {
+
+  var app = null;
+  var args = null;
+
+  before(function (done) {
+    args = {
+      cwd : join(fixtures, 'server-with-jsonp'),
+      jsonp : true,
+      debug : true
+    };
+    process.chdir(args.cwd);
+    var pkgFile = join(args.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+    }
+    console.log(args)
+    sw.build.getWebpackOpts(args, function (err, webpackOpts) {
+      var server = new Server(sw.webpack(webpackOpts), args);
+      app = server.app;
+      server.once('done', done);
+    });
+  });
+
+  it('get /x.json', function(done) {
+    request(app.listen())
+      .get('/x.json')
+      .expect(function(res){
+        if(res.text.should.be.eql('{\n  "hello": "world"\n}\n') === 0) throw new Error('Can not get right json content');
+      })
+      .end(function(err){
+        if (err) return done(err);
+        done();
+      });
+  });
+
+  it('get /x.json?callback=t', function(done) {
+    request(app.listen())
+      .get('/x.json?callback=t')
+      .expect(function(res){
+        if(res.text.should.be.eql(';t({\n  "hello": "world"\n}\n);') === 0) throw new Error('Can not get right jsonp content');
+      })
+      .end(function(err){
+        if (err) return done(err);
+        done();
+      });
+  });
+
+});
 
 describe('server-with-pkg-name', function() {
 

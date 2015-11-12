@@ -23,6 +23,7 @@ program
   .option('--weinre', 'weinre')
   .option('--https', 'https')
   .option('--verbose', 'show more logging')
+  .option('--define [yourMode]', 'using the value of pkg.spm.define.yourMode or pkg.spm.define.default when "yourMode" is not specified')
   .parse(process.argv);
 
 //log.config(program);
@@ -35,7 +36,8 @@ var args = {
   weinre: program.weinre,
   livereload: program.livereload,
   proxy: program.proxy,
-  port: program.port || 8000
+  port: program.port || 8000,
+  define: program.define
 };
 
 var sw = require('spm-webpack');
@@ -58,16 +60,6 @@ sw.build.installDeps(args, function() {
   var spmArgs = extend(true, {}, {server:{devtool:'#source-map'}}, spmArgv(cwd,wpOpts.pkg));
   wpOpts.devtool = spmArgs.server.devtool;
 
-  if (spmArgs.server.define) {
-    for (var i=0; i<wpOpts.plugins.length; i++) {
-      var p = wpOpts.plugins[i];
-      if (p.definitions) {
-        wpOpts.plugins.splice(i, 1);
-        break;
-      }
-    }
-    wpOpts.plugins.push(new sw.webpack.DefinePlugin(spmArgs.server.define));
-  }
 
   isPortInUse(args.port, function() {
     log.error('error', 'port %s is in use', args.port);

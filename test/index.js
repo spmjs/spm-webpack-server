@@ -254,3 +254,127 @@ describe('server-with-specify-dest', function() {
 
 });
 
+describe('server-with-define', function() {
+
+  var app = null;
+  var args = null;
+
+  before(function (done) {
+    args = {
+      cwd : join(fixtures, 'define'),
+      define: 'prod',
+      debug: true
+    };
+    process.chdir(args.cwd);
+    var pkgFile = join(args.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+      args.pkg.spm.hash = false;
+    }
+    sw.build.getWebpackOpts(args, function (err, webpackOpts) {
+      var server = new Server(sw.webpack(webpackOpts), args);
+      app = server.app;
+      server.once('done', done);
+    });
+  });
+
+  it('get /a.js', function(done) {
+    request(app.listen())
+      .get('/a.js')
+      .expect(function(res){
+        if(res.text.indexOf('NAME') > -1 || res.text.indexOf('AGE') > -1 || res.text.indexOf('FLAG') > -1){
+          throw new Error('define param failed');
+        }else if(res.text.indexOf('console.log(("prod"), (-1), (true));') === -1){
+          throw new Error('define param to a wrong value');
+        }
+      })
+      .end(function(err){
+        if (err) return done(err);
+        done();
+      });
+  });
+
+});
+
+describe('server-with-define-default', function() {
+
+  var app = null;
+  var args = null;
+
+  before(function (done) {
+    args = {
+      cwd : join(fixtures, 'define'),
+      define: true,
+      debug: true
+    };
+    process.chdir(args.cwd);
+    var pkgFile = join(args.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+      args.pkg.spm.hash = false;
+    }
+    sw.build.getWebpackOpts(args, function (err, webpackOpts) {
+      var server = new Server(sw.webpack(webpackOpts), args);
+      app = server.app;
+      server.once('done', done);
+    });
+  });
+
+  it('get /a.js', function(done) {
+    request(app.listen())
+      .get('/a.js')
+      .expect(function(res){
+        if(res.text.indexOf('NAME') > -1 || res.text.indexOf('AGE') > -1 || res.text.indexOf('FLAG') > -1){
+          throw new Error('define param failed');
+        }else if(res.text.indexOf('console.log(("default"), (0), (false));') === -1){
+          throw new Error('define param to a wrong value');
+        }
+      })
+      .end(function(err){
+        if (err) return done(err);
+        done();
+      });
+  });
+
+});
+/*describe('server-with-define-cli', function() {
+
+  var app = null;
+  var args = null;
+
+  before(function (done) {
+    args = {
+      cwd : join(fixtures, 'define'),
+      define: '{NAME:"cli",AGE:999,FLAG:true}',
+      debug: true
+    };
+    process.chdir(args.cwd);
+    var pkgFile = join(args.cwd, 'package.json');
+    if (existsSync(pkgFile)) {
+      args.pkg = JSON.parse(readFileSync(pkgFile, 'utf-8'));
+      args.pkg.spm.hash = false;
+    }
+    sw.build.getWebpackOpts(args, function (err, webpackOpts) {
+      var server = new Server(sw.webpack(webpackOpts), args);
+      app = server.app;
+      server.once('done', done);
+    });
+  });
+
+  it('get /a.js', function(done) {
+    request(app.listen())
+      .get('/a.js')
+      .expect(function(res){
+        if(res.text.indexOf('NAME') > -1 || res.text.indexOf('AGE') > -1 || res.text.indexOf('FLAG') > -1){
+          throw new Error('define param failed');
+        }else if(res.text.indexOf('console.log(("cli"), (999), (true));') === -1){
+          throw new Error('define param to a wrong value');
+        }
+      })
+      .end(function(err){
+        if (err) return done(err);
+        done();
+      });
+  });
+
+});*/

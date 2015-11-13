@@ -2,6 +2,12 @@
 
 ---
 
+## 0.8.3 
+
+- feat: brand new define
+- fix: make test
+- deps: upgrade spm-webpack to 0.8.1, remove gnode, memory-fs, mime
+
 ## 0.8.2 
 
 - deps: upgrade spm-webpack to 0.8.0

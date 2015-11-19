@@ -52,7 +52,7 @@ if (existsSync(pkgFile)) {
 args.fromServer = true;
 
 // 安装依赖
-sw.build.installDeps(args, function() {
+sw.build.checkDeps(args, function() {
 
   var wpOpts = sw.build.getWebpackOpts(args);
 

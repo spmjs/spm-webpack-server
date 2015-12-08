@@ -9,6 +9,11 @@ Server for spm projects.
 
 ---
 
+# Notice
+
+From spm-webpack-server@1.0.0  spm-webpack-server does not support  spmjsio or any custom source any more !
+
+
 ## Install
 
 ```bash

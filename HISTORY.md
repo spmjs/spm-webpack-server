@@ -2,6 +2,9 @@
 
 ---
 
+## 1.0.0 
+- deps: upgrade spm-webpack to 1.0.0
+
 ## 0.8.3 
 
 - feat: brand new define

@@ -16,7 +16,7 @@ var readFileSync = fs.readFileSync;
 program
   .version(require('./package').version, '-v, --version')
   .option('-p, --port <port>', 'port')
-  .option('--proxy', 'proxy with anyproxy')
+  .option('--proxy [rule]', 'proxy with anyproxy. rule is anyproxy rule file.')
   .option('--livereload', 'livereload')
   .option('--compress', 'build files with compress')
   .option('--weinre', 'weinre')

@@ -4,6 +4,7 @@
   "description": "Server for spm projects.",
   "main": "index",
   "dependencies": {
+    "atool-monitor": "0.x",
     "co-request": "~0.2.1",
     "coffee-script": "~1.9.1",
     "combo-url": "~0.2.0",

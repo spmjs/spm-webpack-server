@@ -2,6 +2,9 @@
 
 ---
 
+## 1.0.1
+- feat: add ant tool monitor
+
 ## 1.0.0 
 - deps: upgrade spm-webpack to 1.0.0
 

@@ -89,3 +89,5 @@ function isPortInUse(port, error, success) {
     conn.close(success.bind(null, null, conn.address().port));
   });
 }
+
+require('atool-monitor').emit();

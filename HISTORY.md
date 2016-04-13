@@ -2,6 +2,10 @@
 
 ---
 
+## 0.8.4
+
+- feat: add ant tool monitor
+
 ## 0.8.3 
 
 - feat: brand new define

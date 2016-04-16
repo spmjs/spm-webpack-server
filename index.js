@@ -188,7 +188,8 @@ function Server(compiler, opts) {
 
     !anyproxy.isRootCAFileExists() && anyproxy.generateRootCA();
 
-    new anyproxy.proxyServer({
+
+    var anyproxy_opts = {
       type: 'http',
       port: opts.anyproxyPort || 8989,
       hostname: 'localhost',
@@ -196,7 +197,28 @@ function Server(compiler, opts) {
         port: opts.port,
         hostname: ip
       })
-    });
+    };
+
+    if (typeof opts.proxy == 'string') {
+      var rule_path = path.join(process.cwd(), opts.proxy);
+
+      if (fs.existsSync(rule_path) && fs.statSync(rule_path).isFile()) {
+        try {
+          var rule = require(rule_path);
+        } catch (e) {
+          log.error('error', rule_path + ' is not a correct anyproxy rule file');
+          process.exit(1);
+        }
+
+        anyproxy_opts = {
+          rule: rule
+        };
+      } else {
+        log.error('error', rule_path + ' is not a correct anyproxy rule file. Use default anyproxy options');
+      }
+    }
+
+    new anyproxy.proxyServer(anyproxy_opts);
   }
 
   // https 支持
